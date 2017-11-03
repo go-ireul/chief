@@ -9,8 +9,7 @@ message NewKeyRequest {
 message NewKeyResponse {
     enum ErrorCode {
         OK = 0;
-        NOT_FOUND = 1; // pool name not found
-        OUT_OF_RANGE = 2; // name is used out
+        DRAINED = 2; // pool is drained out
         INTERNAL = -1; // internal error
     }
     ErrorCode Code = 1;
@@ -18,26 +17,6 @@ message NewKeyResponse {
     uint64 Value = 3;
 }
 
-message NewPoolRequest {
-    string Name = 1; // pool name
-    uint64 ShardStart = 2; // start of shard (included, in uint64 space)
-    uint64 ShardLen = 3; // length of shard (in uint64 space)
-    uint64 StripeLen = 4; // length of stripe (in uint64 space)
-}
-
-message NewPoolResponse {
-    enum ErrorCode {
-        OK = 0;
-        CONFLICT = 1; // pool existed and parameters mismatch
-        BAD_PARAMS = 2; // bad parameters
-        INTERNAL = -1; // internal error
-    }
-    ErrorCode Code = 1;
-    string Name = 2;
-    bool Created = 3;
-}
-
 service Chief {
-    rpc NewPool(NewPoolRequest) returns (NewPoolResponse);
     rpc NewKey(NewKeyRequest) returns (NewKeyResponse);
 }
