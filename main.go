@@ -59,12 +59,14 @@ func main() {
 	signalChan := make(chan os.Signal, 1)
 	signal.Notify(signalChan, syscall.SIGINT, syscall.SIGTERM)
 	go func() {
-		for range signalChan {
+		for sig := range signalChan {
+			log.Printf("exiting on signal [%v]\n", sig)
 			s.Stop()
 			break
 		}
 	}()
 
 	// start server
+	log.Printf("listening at [%v], db file at [%v]\n", bind, dbFile)
 	s.Serve(lis)
 }
