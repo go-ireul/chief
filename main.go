@@ -41,7 +41,7 @@ func main() {
 	flag.Parse()
 
 	var err error
-	if db, err = bolt.Open(dbFile, 0600, nil); err != nil {
+	if db, err = bolt.Open(dbFile, 0660, nil); err != nil {
 		log.Println("failed to open db:", dbFile)
 		return
 	}
