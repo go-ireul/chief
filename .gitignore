@@ -16,5 +16,6 @@
 # VSCode
 .vscode/
 
-# test.db
-test.db
+# test files
+/*.db
+/chief
