@@ -15,3 +15,6 @@
 
 # VSCode
 .vscode/
+
+# test.db
+test.db

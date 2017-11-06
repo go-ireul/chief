@@ -1,12 +1,12 @@
 syntax = "proto3";
 
-package chief;
+package types;
 
-message NewKeyRequest {
+message NewIDRequest {
     string Name = 1;
 }
 
-message NewKeyResponse {
+message NewIDResponse {
     enum ErrorCode {
         OK = 0;
         DRAINED = 2; // pool is drained out
@@ -14,9 +14,9 @@ message NewKeyResponse {
     }
     ErrorCode Code = 1;
     string Name = 2;
-    uint64 Value = 3;
+    uint64 ID = 3;
 }
 
 service Chief {
-    rpc NewKey(NewKeyRequest) returns (NewKeyResponse);
+    rpc NewID(NewIDRequest) returns (NewIDResponse);
 }
