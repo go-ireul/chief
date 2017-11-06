@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"testing"
 
 	"ireul.com/bolt"
@@ -12,9 +11,10 @@ func Test_newID(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	id, err := newID(db, "test")
-	if err != nil {
-		panic(err)
+	for i := 0; i < 1000; i++ {
+		_, err := newID(db, "test")
+		if err != nil {
+			panic(err)
+		}
 	}
-	fmt.Println("NewID", id)
 }
