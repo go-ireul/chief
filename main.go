@@ -19,6 +19,13 @@ var db *bolt.DB
 var dbFile string
 var bind string
 
+var shard uint64
+var shardPrefix uint64
+var shardMask = ^uint64(1) >> 4
+var shardSize = uint64(1) << 60
+
+var exitCode int
+
 type chiefServer struct{}
 
 // NewID implements ChiefServer
@@ -28,7 +35,6 @@ func (chiefServer) NewID(ctx context.Context, req *types.NewIDRequest) (resp *ty
 		return
 	}
 	resp = &types.NewIDResponse{
-		Code: types.NewIDResponse_OK,
 		Name: req.GetName(),
 		ID:   id,
 	}
@@ -36,20 +42,39 @@ func (chiefServer) NewID(ctx context.Context, req *types.NewIDRequest) (resp *ty
 }
 
 func main() {
+	// defered os.Exit with code
+	defer os.Exit(exitCode)
+
+	// parse flags
 	flag.StringVar(&dbFile, "db", "chief.db", "database file")
 	flag.StringVar(&bind, "bind", ":9000", "bind address with format [IP:PORT]")
+	flag.Uint64Var(&shard, "shard", 1, "shard configuration")
 	flag.Parse()
 
+	// check shard
+	if shard < 1 || shard > 16 {
+		log.Println("shard should be a integer from 1 to 16")
+		exitCode = 1
+		return
+	}
+
+	// shift shard
+	shardPrefix = shard << 60 // 16 = 2 ** 4
+
+	// open DB
 	var err error
 	if db, err = bolt.Open(dbFile, 0660, nil); err != nil {
 		log.Println("failed to open db:", dbFile)
+		exitCode = 1
 		return
 	}
 	defer db.Close()
 
+	// listen
 	var lis net.Listener
 	if lis, err = net.Listen("tcp", bind); err != nil {
 		log.Println("failed to listen:", bind)
+		exitCode = 1
 		return
 	}
 	s := grpc.NewServer()

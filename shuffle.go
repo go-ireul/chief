@@ -2,10 +2,13 @@ package main
 
 import (
 	"crypto/rand"
+	"errors"
 
 	"ireul.com/bolt"
 	"ireul.com/mshuf"
 )
+
+var errSequenceDrain = errors.New("sequence drain")
 
 var keyMatrix = []byte("matrix")
 
@@ -28,12 +31,20 @@ func newID(db *bolt.DB, name string) (ret uint64, err error) {
 			}
 			bkt.Put(keyMatrix, m)
 		}
-		// shuffle new sequence
+		// new sequence
 		var seq uint64
 		if seq, err = bkt.NextSequence(); err != nil {
 			return
 		}
+		// check sequence exceeded
+		if seq >= shardSize {
+			err = errSequenceDrain
+			return
+		}
+		// shuffle
 		ret = m.Shuffle(seq)
+		// mask to shard
+		ret = ret&shardMask + shardPrefix
 		return
 	})
 	return
