@@ -1,13 +1,11 @@
-FROM alpine:3.6
-
-RUN mkdir -p /var/lib/chief
-
-WORKDIR /var/lib/chief
+FROM scratch
 
 VOLUME /var/lib/chief
 
-ADD chief /bin
+WORKDIR /var/lib/chief
+
+ADD chief /
 
 EXPOSE 9000
 
-ENTRYPOINT ["/bin/chief"]
+ENTRYPOINT ["/chief"]
