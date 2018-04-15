@@ -3,7 +3,7 @@ package main
 import (
 	"testing"
 
-	"ireul.com/bolt"
+	"github.com/boltdb/bolt"
 )
 
 func Test_newID(t *testing.T) {

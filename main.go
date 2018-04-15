@@ -9,10 +9,10 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/boltdb/bolt"
 	"google.golang.org/grpc"
-	"ireul.com/bolt"
 
-	"ireul.com/chief/types"
+	"github.com/yankeguo/chief/types"
 )
 
 var db *bolt.DB

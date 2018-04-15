@@ -4,8 +4,8 @@ import (
 	"crypto/rand"
 	"errors"
 
-	"ireul.com/bolt"
-	"ireul.com/mshuf"
+	"github.com/boltdb/bolt"
+	"magi.systems/math/mshuf"
 )
 
 var errSequenceDrain = errors.New("sequence drain")

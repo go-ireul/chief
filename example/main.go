@@ -4,8 +4,8 @@ import (
 	"context"
 	"log"
 
+	"github.com/yankeguo/chief/types"
 	"google.golang.org/grpc"
-	"ireul.com/chief/types"
 )
 
 func main() {
